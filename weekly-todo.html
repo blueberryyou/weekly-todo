@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>本周待办事项 - 四象限管理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --klein-blue: #002FA7;
+            --light-blue: #E8F0FF;
+            --white: #FFFFFF;
+            --text-dark: #333;
+            --text-light: #666;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: var(--klein-blue);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .week-info {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .quadrant {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 47, 167, 0.1);
+            min-height: 400px;
+            transition: box-shadow 0.3s;
+        }
+
+        .quadrant:hover {
+            box-shadow: 0 4px 16px rgba(0, 47, 167, 0.15);
+        }
+
+        .quadrant-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--klein-blue);
+        }
+
+        .quadrant-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quadrant-title h2 {
+            color: var(--klein-blue);
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+
+        .quadrant-title .subtitle {
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .add-btn {
+            background: var(--klein-blue);
+            color: var(--white);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            line-height: 1;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0, 47, 167, 0.3);
+        }
+
+        .tasks {
+            list-style: none;
+        }
+
+        .task {
+            background: var(--light-blue);
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            cursor: move;
+        }
+
+        .task:hover {
+            transform: translateX(4px);
+            box-shadow: 0 2px 6px rgba(0, 47, 167, 0.2);
+        }
+
+        .task.completed {
+            opacity: 0.6;
+        }
+
+        .task.completed .task-text {
+            text-decoration: line-through;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--klein-blue);
+        }
+
+        .task-text {
+            flex: 1;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .task-btn {
+            background: none;
+            border: none;
+            color: var(--klein-blue);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px;
+            transition: transform 0.2s;
+        }
+
+        .task-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .task-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .task-input:focus {
+            outline: none;
+            border-color: var(--klein-blue);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--klein-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #0039CC;
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            background: var(--border);
+            color: var(--text-dark);
+        }
+
+        .btn-cancel:hover {
+            background: #CCC;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-light);
+            padding: 40px 20px;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .matrix {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .quadrant {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>本周待办事项</h1>
+            <p class="week-info" id="weekInfo"></p>
+        </header>
+
+        <div class="matrix">
+            <!-- 第一象限：重要且紧急 -->
+            <div class="quadrant" data-quadrant="1">
+                <div class="quadrant-header">
+                    <div class="quadrant-title">
+                        <h2>重要且紧急</h2>
+                        <span class="subtitle">立即处理</span>
+                    </div>
+                    <button class="add-btn" onclick="showAddTask(1)">+</button>
+                </div>
+                <div class="input-group hidden" id="input-1">
+                    <input type="text" class="task-input" placeholder="输入待办事项..." id="task-input-1">
+                    <button class="btn" onclick="addTask(1)">添加</button>
+                    <button class="btn btn-cancel" onclick="hideAddTask(1)">取消</button>
+                </div>
+                <ul class="tasks" id="tasks-1"></ul>
+            </div>
+
+            <!-- 第二象限：重要但不紧急 -->
+            <div class="quadrant" data-quadrant="2">
+                <div class="quadrant-header">
+                    <div class="quadrant-title">
+                        <h2>重要但不紧急</h2>
+                        <span class="subtitle">计划安排</span>
+                    </div>
+                    <button class="add-btn" onclick="showAddTask(2)">+</button>
+                </div>
+                <div class="input-group hidden" id="input-2">
+                    <input type="text" class="task-input" placeholder="输入待办事项..." id="task-input-2">
+                    <button class="btn" onclick="addTask(2)">添加</button>
+                    <button class="btn btn-cancel" onclick="hideAddTask(2)">取消</button>
+                </div>
+                <ul class="tasks" id="tasks-2"></ul>
+            </div>
+
+            <!-- 第三象限：不重要但紧急 -->
+            <div class="quadrant" data-quadrant="3">
+                <div class="quadrant-header">
+                    <div class="quadrant-title">
+                        <h2>紧急但不重要</h2>
+                        <span class="subtitle">委托他人</span>
+                    </div>
+                    <button class="add-btn" onclick="showAddTask(3)">+</button>
+                </div>
+                <div class="input-group hidden" id="input-3">
+                    <input type="text" class="task-input" placeholder="输入待办事项..." id="task-input-3">
+                    <button class="btn" onclick="addTask(3)">添加</button>
+                    <button class="btn btn-cancel" onclick="hideAddTask(3)">取消</button>
+                </div>
+                <ul class="tasks" id="tasks-3"></ul>
+            </div>
+
+            <!-- 第四象限：不重要且不紧急 -->
+            <div class="quadrant" data-quadrant="4">
+                <div class="quadrant-header">
+                    <div class="quadrant-title">
+                        <h2>不重要不紧急</h2>
+                        <span class="subtitle">减少或删除</span>
+                    </div>
+                    <button class="add-btn" onclick="showAddTask(4)">+</button>
+                </div>
+                <div class="input-group hidden" id="input-4">
+                    <input type="text" class="task-input" placeholder="输入待办事项..." id="task-input-4">
+                    <button class="btn" onclick="addTask(4)">添加</button>
+                    <button class="btn btn-cancel" onclick="hideAddTask(4)">取消</button>
+                </div>
+                <ul class="tasks" id="tasks-4"></ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>基于艾森豪威尔矩阵的时间管理方法</p>
+        </footer>
+    </div>
+
+    <script>
+        // 初始化数据
+        let tasks = {
+            1: [],
+            2: [],
+            3: [],
+            4: []
+        };
+
+        // 从本地存储加载数据
+        function loadTasks() {
+            const saved = localStorage.getItem('weeklyTasks');
+            if (saved) {
+                tasks = JSON.parse(saved);
+                renderAllTasks();
+            }
+        }
+
+        // 保存到本地存储
+        function saveTasks() {
+            localStorage.setItem('weeklyTasks', JSON.stringify(tasks));
+        }
+
+        // 显示当前周信息
+        function updateWeekInfo() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const weekDay = ['日', '一', '二', '三', '四', '五', '六'][now.getDay()];
+
+            document.getElementById('weekInfo').textContent =
+                `${year}年${month}月${day}日 星期${weekDay}`;
+        }
+
+        // 显示添加任务输入框
+        function showAddTask(quadrant) {
+            document.getElementById(`input-${quadrant}`).classList.remove('hidden');
+            document.getElementById(`task-input-${quadrant}`).focus();
+        }
+
+        // 隐藏添加任务输入框
+        function hideAddTask(quadrant) {
+            document.getElementById(`input-${quadrant}`).classList.add('hidden');
+            document.getElementById(`task-input-${quadrant}`).value = '';
+        }
+
+        // 添加任务
+        function addTask(quadrant) {
+            const input = document.getElementById(`task-input-${quadrant}`);
+            const text = input.value.trim();
+
+            if (text === '') return;
+
+            const task = {
+                id: Date.now(),
+                text: text,
+                completed: false,
+                quadrant: quadrant
+            };
+
+            tasks[quadrant].push(task);
+            saveTasks();
+            renderTasks(quadrant);
+            hideAddTask(quadrant);
+        }
+
+        // 删除任务
+        function deleteTask(quadrant, taskId) {
+            tasks[quadrant] = tasks[quadrant].filter(t => t.id !== taskId);
+            saveTasks();
+            renderTasks(quadrant);
+        }
+
+        // 切换任务完成状态
+        function toggleTask(quadrant, taskId) {
+            const task = tasks[quadrant].find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                renderTasks(quadrant);
+            }
+        }
+
+        // 移动任务到其他象限
+        function moveTask(fromQuadrant, taskId, toQuadrant) {
+            const taskIndex = tasks[fromQuadrant].findIndex(t => t.id === taskId);
+            if (taskIndex > -1) {
+                const task = tasks[fromQuadrant][taskIndex];
+                task.quadrant = toQuadrant;
+                tasks[fromQuadrant].splice(taskIndex, 1);
+                tasks[toQuadrant].push(task);
+                saveTasks();
+                renderAllTasks();
+            }
+        }
+
+        // 渲染单个象限的任务
+        function renderTasks(quadrant) {
+            const tasksList = document.getElementById(`tasks-${quadrant}`);
+            tasksList.innerHTML = '';
+
+            if (tasks[quadrant].length === 0) {
+                tasksList.innerHTML = '<div class="empty-state">暂无待办事项<br>点击 + 添加</div>';
+                return;
+            }
+
+            tasks[quadrant].forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task ${task.completed ? 'completed' : ''}`;
+                li.draggable = true;
+                li.dataset.taskId = task.id;
+                li.dataset.quadrant = quadrant;
+
+                li.innerHTML = `
+                    <input type="checkbox" class="task-checkbox"
+                           ${task.completed ? 'checked' : ''}
+                           onchange="toggleTask(${quadrant}, ${task.id})">
+                    <span class="task-text">${task.text}</span>
+                    <div class="task-actions">
+                        <button class="task-btn" onclick="deleteTask(${quadrant}, ${task.id})" title="删除">🗑️</button>
+                    </div>
+                `;
+
+                // 拖拽事件
+                li.addEventListener('dragstart', handleDragStart);
+                li.addEventListener('dragover', handleDragOver);
+                li.addEventListener('drop', handleDrop);
+                li.addEventListener('dragend', handleDragEnd);
+
+                tasksList.appendChild(li);
+            });
+        }
+
+        // 渲染所有象限
+        function renderAllTasks() {
+            for (let i = 1; i <= 4; i++) {
+                renderTasks(i);
+            }
+        }
+
+        // 拖拽处理
+        let draggedElement = null;
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.style.opacity = '0.4';
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            const targetQuadrant = this.closest('.quadrant');
+            if (targetQuadrant && draggedElement) {
+                const fromQuadrant = parseInt(draggedElement.dataset.quadrant);
+                const toQuadrant = parseInt(targetQuadrant.dataset.quadrant);
+                const taskId = parseInt(draggedElement.dataset.taskId);
+
+                if (fromQuadrant !== toQuadrant) {
+                    moveTask(fromQuadrant, taskId, toQuadrant);
+                }
+            }
+
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+            draggedElement = null;
+        }
+
+        // 为象限添加拖拽放置事件
+        document.querySelectorAll('.quadrant').forEach(quadrant => {
+            quadrant.addEventListener('dragover', handleDragOver);
+            quadrant.addEventListener('drop', function(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+
+                if (draggedElement) {
+                    const fromQuadrant = parseInt(draggedElement.dataset.quadrant);
+                    const toQuadrant = parseInt(this.dataset.quadrant);
+                    const taskId = parseInt(draggedElement.dataset.taskId);
+
+                    if (fromQuadrant !== toQuadrant) {
+                        moveTask(fromQuadrant, taskId, toQuadrant);
+                    }
+                }
+
+                return false;
+            });
+        });
+
+        // 回车键添加任务
+        document.querySelectorAll('.task-input').forEach((input, index) => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addTask(index + 1);
+                }
+            });
+        });
+
+        // 初始化
+        updateWeekInfo();
+        loadTasks();
+    </script>
+</body>
+</html>
