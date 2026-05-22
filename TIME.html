@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>卷卷时刻</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #030614;
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            line-height: 1.4;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 动态网格背景 (硬核科技感) */
+        #grid-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 1000px;
+            width: 90%;
+            padding: 2.5rem 1.5rem;
+            background: rgba(0, 5, 15, 0.65);
+            backdrop-filter: blur(6px);
+            border-radius: 32px;
+            border: 1px solid #1a3b7a;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 首行: 粗犷无修饰 */
+        .primary-line {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            font-stretch: condensed;
+        }
+
+        /* 日期标签: 极简细线 + 星期融合 */
+        .target-label {
+            font-size: 1.1rem;
+            letter-spacing: 0.45em;
+            font-weight: 400;
+            color: #a0b5e0;
+            margin-bottom: 2.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #1e3d8f;
+            display: inline-block;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* 时间卡片网格: 无发光, 硬朗卡片 */
+        .countdown-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: baseline;
+            gap: 1.8rem 3rem;
+            margin: 2rem 0 1.5rem;
+        }
+
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 140px;
+            background: rgba(0, 8, 25, 0.7);
+            border-radius: 24px;
+            padding: 1.5rem 0.8rem 1.8rem;
+            border: 1px solid #1f4196;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+            transition: all 0.2s ease;
+        }
+
+        .time-unit:hover {
+            border-color: #3a6bff;
+            background: rgba(0, 15, 40, 0.8);
+            transform: translateY(-4px);
+        }
+
+        .time-unit .digit {
+            font-size: 7.5rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #ffffff;
+            letter-spacing: 6px;
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+            text-shadow: none; /* 彻底无发光 */
+        }
+
+        .time-unit .label {
+            font-size: 1.1rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: #7f9fdf;
+            margin-top: 0.6rem;
+            font-weight: 400;
+            text-shadow: none;
+        }
+
+        /* 硬朗分割线: 纯色块 */
+        .divider {
+            width: 180px;
+            height: 3px;
+            background: #1f4196;
+            margin: 1.8rem auto 1.5rem;
+            border: none;
+        }
+
+        /* 描述文字 */
+        .desc {
+            font-size: 1.2rem;
+            color: #a5b9ec;
+            font-weight: 350;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+            text-shadow: none;
+        }
+
+        /* 底部 */
+        .meta-note {
+            margin-top: 2rem;
+            font-size: 1rem;
+            color: #3d5a9e;
+            letter-spacing: 3px;
+            font-weight: 300;
+        }
+
+        /* 响应式 */
+        @media (max-width: 700px) {
+            .primary-line { font-size: 2.5rem; }
+            .time-unit { min-width: 110px; }
+            .time-unit .digit { font-size: 5.5rem; }
+            .countdown-grid { gap: 1rem 1.8rem; }
+            .target-label { font-size: 0.85rem; letter-spacing: 0.2em; white-space: normal; word-break: keep-all; }
+        }
+        @media (max-width: 480px) {
+            .primary-line { font-size: 2rem; }
+            .time-unit .digit { font-size: 4.2rem; }
+            .time-unit { min-width: 90px; padding: 1rem 0.2rem; }
+            .target-label { font-size: 0.7rem; letter-spacing: 0.15em; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 动态网格 Canvas (硬核科技感) -->
+    <canvas id="grid-canvas"></canvas>
+
+    <div class="container">
+        <div class="primary-line">卷卷时钟</div>
+        <div class="target-label" id="dateLabel">加载中...</div>
+
+        <div class="countdown-grid" id="clockGrid">
+            <div class="time-unit">
+                <span class="digit" id="hours">00</span>
+                <span class="label"></span>
+            </div>
+            <div class="time-unit">
+                <span class="digit" id="minutes">00</span>
+                <span class="label"></span>
+            </div>
+            <div class="time-unit">
+                <span class="digit" id="seconds">00</span>
+                <span class="label"></span>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="desc" id="descText">⚡ 时间是唯一不可再生资源 ⚡</div>
+        <div class="meta-note">⚡ 星光不问赶路人 时光不负有心人 ⚡</div>
+    </div>
+
+    <script>
+        (function() {
+            // DOM 元素
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            const dateLabel = document.getElementById('dateLabel');
+            const descEl = document.getElementById('descText');
+
+            // 格式化两位数字
+            const formatTwo = (n) => (n < 10 ? '0' + n : String(n));
+
+            // 星期映射 (中文)
+            const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+            // 更新实时时钟：显示当前时间 (小时/分钟/秒) + 日期 + 星期
+            function updateRealTimeClock() {
+                const now = new Date();
+                
+                // 1. 更新时分秒卡片
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds();
+                
+                hoursEl.textContent = formatTwo(hours);
+                minutesEl.textContent = formatTwo(minutes);
+                secondsEl.textContent = formatTwo(seconds);
+                
+                // 2. 更新日期标签: 年月日 + 星期 (风格与科技感统一)
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const weekIndex = now.getDay();
+                const weekStr = weekDays[weekIndex];
+                
+                // 格式: 2025.03.24 星期一
+                dateLabel.textContent = `${year}.${month}.${day}  ${weekStr}`;
+                
+                // 可选：让描述保持实时感，但无需频繁变动
+                // 只做一次优雅的静态描述，保持页面清爽
+                if (descEl.textContent !== '⚡ 时间是唯一不可再生资源 ⚡') {
+                    // 确保第一次加载后文本固定，避免闪烁（实际一直不变）
+                    descEl.textContent = '⚡ 时间是唯一不可再生资源 ⚡';
+                }
+            }
+            
+            // 立即执行，并每秒刷新
+            updateRealTimeClock();
+            setInterval(updateRealTimeClock, 1000);
+            
+            // ---------- 动态网格背景 (保留原有科技动效，增强沉浸感) ----------
+            const canvas = document.getElementById('grid-canvas');
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            let offset = 0;
+            
+            function resizeCanvas() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+            
+            function drawGrid() {
+                if (!ctx) return;
+                ctx.clearRect(0, 0, width, height);
+                
+                const step = 45; // 网格大小
+                const startX = offset % step;
+                const startY = offset % step;
+                
+                ctx.beginPath();
+                ctx.strokeStyle = '#1f3f9f';
+                ctx.lineWidth = 1.2;
+                
+                // 垂直线
+                for (let x = startX; x < width; x += step) {
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, height);
+                }
+                // 水平线
+                for (let y = startY; y < height; y += step) {
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                }
+                ctx.stroke();
+                
+                // 绘制动态流动的点 (科技粒子)
+                ctx.fillStyle = '#3a6bff';
+                for (let i = 0; i < 60; i++) {
+                    const x = (i * 37 + offset * 2) % width;
+                    const y = (i * 23 + offset) % height;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                offset += 0.6; // 缓慢移动
+                requestAnimationFrame(drawGrid);
+            }
+            
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+            });
+            
+            resizeCanvas();
+            drawGrid();
+        })();
+    </script>
+    
+    <!-- Inter 字体 (包含粗细样式) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+</body>
+</html>
