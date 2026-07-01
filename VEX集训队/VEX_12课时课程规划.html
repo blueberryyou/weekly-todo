@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VEX IQ 2026-2027赛季 课程规划</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+/* ===== 头部 ===== */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 4px solid #3b82f6;
+}
+
+.header-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 36px;
+    color: #1e40af;
+    font-weight: bold;
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    background: #eff6ff;
+    padding: 12px 28px;
+    border-radius: 12px;
+    border-left: 4px solid #3b82f6;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #64748b;
+}
+
+.stat-value {
+    font-size: 24px;
+    color: #1e40af;
+    font-weight: bold;
+}
+
+/* ===== 阶段导航 ===== */
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 35px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    padding: 15px 0;
+    border-radius: 12px;
+}
+
+.nav-tab {
+    padding: 10px 24px;
+    font-size: 15px;
+    border: 2px solid #3b82f6;
+    background: white;
+    color: #3b82f6;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.nav-tab:hover { background: #eff6ff; }
+
+.nav-tab.active {
+    background: #3b82f6;
+    color: white;
+}
+
+.section { display: none; }
+.section.active { display: block; }
+
+/* ===== 阶段标题 ===== */
+.phase-header {
+    text-align: center;
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+
+.phase-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.phase-desc {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 8px;
+}
+
+/* ===== 课程卡片 ===== */
+.lesson-card {
+    background: #f8fafc;
+    border-radius: 16px;
+    padding: 25px 28px;
+    margin-bottom: 20px;
+    border-left: 5px solid #3b82f6;
+    transition: all 0.3s;
+}
+
+.lesson-card:hover {
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15);
+    transform: translateX(2px);
+}
+
+.lesson-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+}
+
+.lesson-number {
+    background: #3b82f6;
+    color: white;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.lesson-theme {
+    font-size: 19px;
+    font-weight: bold;
+    color: #1e3a8a;
+    line-height: 1.4;
+}
+
+.lesson-body {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.lesson-block {
+    flex: 1;
+    min-width: 250px;
+}
+
+.block-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #3b82f6;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.block-content {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.9;
+}
+
+.block-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.block-content li {
+    padding-left: 18px;
+    position: relative;
+    margin-bottom: 4px;
+}
+
+.block-content li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #3b82f6;
+    font-size: 14px;
+}
+
+.ability-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.ability-tag {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* ===== 底部 ===== */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #e2e8f0;
+}
+
+.footer-text {
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.8;
+}
+
+.footer-highlight {
+    color: #1e40af;
+    font-weight: bold;
+    font-size: 17px;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    .container { padding: 20px; }
+    .title { font-size: 26px; }
+    .lesson-theme { font-size: 16px; }
+    .nav-tab { padding: 8px 16px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== 头部 ===== -->
+    <div class="header">
+        <div class="header-icon">🤖</div>
+        <div class="title">VEX IQ 2026-2027赛季<br/>26暑期课程规划</div>
+        <div class="subtitle">赛题：天天向上 Level Up</div>
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">课程总数</div>
+                <div class="stat-value">12节</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">训练阶段</div>
+                <div class="stat-value">4个</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">核心目标</div>
+                <div class="stat-value">一代车定型</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 阶段导航 ===== -->
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="showPhase(1)">第一阶段 · 认知入门</div>
+        <div class="nav-tab" onclick="showPhase(2)">第二阶段 · 搭建编程</div>
+        <div class="nav-tab" onclick="showPhase(3)">第三阶段 · 联调优化</div>
+        <div class="nav-tab" onclick="showPhase(4)">第四阶段 · 备赛冲刺</div>
+    </div>
+
+    <!-- ===== 第一阶段 ===== -->
+    <div class="section active" id="phase1">
+        <div class="phase-header">
+            <div class="phase-badge">第一阶段：认知与入门</div>
+            <div class="phase-desc">了解赛题规则，认识器材，从英雄车开始入门</div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">1</div>
+                <div class="lesson-theme">赛题规则解读 + 认识器材 + 英雄车认知</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>了解VEX赛事体系与赛季规划</li>
+                            <li>掌握《天天向上》赛题规则与得分方式</li>
+                            <li>认识VEX IQ零件分类与工具</li>
+                            <li>观察英雄车结构，理解各部件功能</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>观看赛题动画，分析得分区与策略</li>
+                            <li>器材分类认知（梁/销/齿轮/轴/连接器）</li>
+                            <li>工具实操练习与安全规范</li>
+                            <li>拆解观察英雄车，记录各部件功能</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">规则理解力</span>
+                <span class="ability-tag">工程认知</span>
+                <span class="ability-tag">结构观察</span>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">2</div>
+                <div class="lesson-theme">英雄车搭建完成 + 基础驾驶 + 反思与头脑风暴</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>完成英雄车整车搭建</li>
+                            <li>学会遥控器配对与基础驾驶</li>
+                            <li>反思英雄车优缺点</li>
+                            <li>头脑风暴一代车设计方案</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>完成英雄车剩余搭建（主控/电池/车轮）</li>
+                            <li>遥控器配对，基础驾驶练习</li>
+                            <li>填写英雄车优缺点分析表</li>
+                            <li>分组头脑风暴：一代车要改什么？</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">工程完成度</span>
+                <span class="ability-tag">批判性思维</span>
+                <span class="ability-tag">创新设计</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 第二阶段 ===== -->
+    <div class="section" id="phase2">
+        <div class="phase-header">
+            <div class="phase-badge">第二阶段：一代车搭建与编程</div>
+            <div class="phase-desc">搭一个模块、编一个模块的程序，模块化推进一代车</div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">3</div>
+                <div class="lesson-theme">底盘设计搭建 + 底盘程序编写</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>分析新赛题对底盘的要求（速度/稳定/越障）</li>
+                            <li>设计并搭建比赛用底盘</li>
+                            <li>学习VEXcode编程环境</li>
+                            <li>编写底盘遥控程序，实现手柄驾驶</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>分析赛道地形，设计底盘方案（轮距/轴距/轮径）</li>
+                            <li>搭建比赛用底盘并测试稳定性</li>
+                            <li>VEXcode入门：电机控制与遥控映射</li>
+                            <li>编写底盘遥控程序并下载测试</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">工程设计思维</span>
+                <span class="ability-tag">编程逻辑</span>
+                <span class="ability-tag">动手+编程双线能力</span>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">4</div>
+                <div class="lesson-theme">升降/投掷机构设计 + 程序编写</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>分析得分区高度，选型升降或投掷方案</li>
+                            <li>搭建升降/投掷机构并安装到底盘</li>
+                            <li>编写机构控制程序（按钮控制升降/投掷）</li>
+                            <li>测试不同高度得分能力</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>分析得分区高度与分值，选型方案</li>
+                            <li>搭建升降/投掷机构原型</li>
+                            <li>编写机构电机程序（L1升/R1降/L2投）</li>
+                            <li>分高度测试得分能力并调参</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">机构设计</span>
+                <span class="ability-tag">编程整合</span>
+                <span class="ability-tag">方案比选</span>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">5</div>
+                <div class="lesson-theme">沙包收集机构搭建 + 一代车总装 + 程序编写</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>设计并搭建沙包收集机构</li>
+                            <li>三大机构总装成完整一代车</li>
+                            <li>编写收集机构控制程序</li>
+                            <li>全面机械+程序调试，一代车定型</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>设计收集方案（铲/夹/推送）并搭建</li>
+                            <li>三大机构组装到一体，检查干涉</li>
+                            <li>编写收集电机程序（R1收/R2停）</li>
+                            <li>全流程机械+程序联调测试</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">系统集成思维</span>
+                <span class="ability-tag">程序联调</span>
+                <span class="ability-tag">工程完成度</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 第三阶段 ===== -->
+    <div class="section" id="phase3">
+        <div class="phase-header">
+            <div class="phase-badge">第三阶段：联调与优化</div>
+            <div class="phase-desc">自动阶段编程、全流程联调、工程笔记整理</div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">6</div>
+                <div class="lesson-theme">完善程序与全流程调试</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>编写自动阶段路径程序</li>
+                            <li>完成自动+遥控全流程联调</li>
+                            <li>反复测试自动路径精度</li>
+                            <li>优化遥控操作手感与得分策略</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>分析自动阶段得分路线</li>
+                            <li>编写自动路径程序（编码器/传感器）</li>
+                            <li>自动+遥控切换联调测试</li>
+                            <li>60秒全流程跑通并优化</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">算法思维</span>
+                <span class="ability-tag">传感器应用</span>
+                <span class="ability-tag">精度调试</span>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">7</div>
+                <div class="lesson-theme">工程笔记整理</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>系统整理前6课工程笔记</li>
+                            <li>补充设计图、数据、代码截图</li>
+                            <li>规范工程笔记格式</li>
+                            <li>培养工程文档习惯与反思能力</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>整理1-6课所有记录与草图</li>
+                            <li>补充设计迭代过程文档</li>
+                            <li>规范格式（日期/标题/图文/反思）</li>
+                            <li>撰写阶段性总结与改进计划</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">工程文档能力</span>
+                <span class="ability-tag">总结反思</span>
+                <span class="ability-tag">项目管理</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 第四阶段 ===== -->
+    <div class="section" id="phase4">
+        <div class="phase-header">
+            <div class="phase-badge">第四阶段：备赛冲刺</div>
+            <div class="phase-desc">策略制定、模拟对抗、赛事模拟、赛前彩排</div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">8</div>
+                <div class="lesson-theme">综合调试与制定策略</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>机器人全面性能验收与优化</li>
+                            <li>制定比赛策略（得分优先级/联队配合）</li>
+                            <li>制定操作手交换方案</li>
+                            <li>形成可执行的比赛策略卡</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>机器人全流程性能验收</li>
+                            <li>分析得分优先级，制定策略</li>
+                            <li>联盟配合演练（2队合作/操作手交换）</li>
+                            <li>制作比赛策略卡（Plan A/Plan B）</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">战略思维</span>
+                <span class="ability-tag">团队协作</span>
+                <span class="ability-tag">决策能力</span>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">9</div>
+                <div class="lesson-theme">模拟对抗（首次完整对抗体验）</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>首次完整60秒模拟对抗赛</li>
+                            <li>体验联盟配合与操作手交换</li>
+                            <li>发现实战中的问题</li>
+                            <li>初步积累比赛经验</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>全流程模拟赛（自动+遥控+交换操作手）</li>
+                            <li>联盟配合实战</li>
+                            <li>记录每局得分与失误</li>
+                            <li>赛后即时复盘，列出问题清单</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">实战应变</span>
+                <span class="ability-tag">抗压能力</span>
+                <span class="ability-tag">团队协作</span>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">10</div>
+                <div class="lesson-theme">模拟对抗与复盘</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>针对第9课问题清单优化机器人与策略</li>
+                            <li>二次模拟对抗验证改进效果</li>
+                            <li>深度复盘，形成优化闭环</li>
+                            <li>巩固操作手熟练度</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>针对问题清单优化（机械/程序/策略）</li>
+                            <li>二次模拟对抗赛</li>
+                            <li>逐局对比得分提升</li>
+                            <li>深度复盘：问题→改进→验证</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">问题解决闭环</span>
+                <span class="ability-tag">迭代优化</span>
+                <span class="ability-tag">数据对比分析</span>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">11</div>
+                <div class="lesson-theme">赛事模拟（模拟正式比赛流程）</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>模拟正式比赛全流程（检录→调试→比赛）</li>
+                            <li>适应比赛节奏与规则约束</li>
+                            <li>检验策略卡在实战中的有效性</li>
+                            <li>锻炼赛前心理素质</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>模拟正式检录与赛前检查</li>
+                            <li>按正式比赛规则进行多轮对抗</li>
+                            <li>模拟联队选边与配合沟通</li>
+                            <li>赛后策略卡有效性评估</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">比赛适应力</span>
+                <span class="ability-tag">规则意识</span>
+                <span class="ability-tag">心理素质</span>
+            </div>
+        </div>
+
+        <div class="lesson-card">
+            <div class="lesson-header">
+                <div class="lesson-number">12</div>
+                <div class="lesson-theme">赛事模拟（赛前全流程彩排与最终验收）</div>
+            </div>
+            <div class="lesson-body">
+                <div class="lesson-block">
+                    <div class="block-title">📋 学习目标</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>赛前全流程彩排（含突发情况演练）</li>
+                            <li>最终机器人验收与锁定</li>
+                            <li>工程笔记最终版完成</li>
+                            <li>赛前心理准备与目标确认</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-block">
+                    <div class="block-title">🛠️ 课堂实践</div>
+                    <div class="block-content">
+                        <ul>
+                            <li>全流程彩排（含设备故障/对手强等突发演练）</li>
+                            <li>机器人最终检查与锁定配置</li>
+                            <li>工程笔记最终版审核</li>
+                            <li>赛前动员：目标确认与心理建设</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="ability-tags">
+                <span class="ability-tag">赛事准备</span>
+                <span class="ability-tag">心理建设</span>
+                <span class="ability-tag">自我认知</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 底部 ===== -->
+    <div class="footer">
+        <div class="footer-text">
+            12节课，从认识器材到走上赛场<br/>
+            每一步都看得见成长
+        </div>
+        <div class="footer-highlight">
+            🏆 目标：8月重庆市选拔赛，正式出征！
+        </div>
+    </div>
+
+</div>
+
+<script>
+function showPhase(n) {
+    // 隐藏所有阶段
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    // 移除所有tab的active
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    // 显示选中的阶段
+    document.getElementById('phase' + n).classList.add('active');
+    // 激活选中的tab
+    event.currentTarget.classList.add('active');
+}
+</script>
+
+</body>
+</html>
